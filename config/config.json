@@ -1,0 +1,9 @@
+{
+  "haipa_compute": {
+    "haipa_compute_v1": {
+      "markdown": "https://raw.githubusercontent.com/haipa/haipa-api-spec/master/specification/README.md",
+      "namespace": "Haipa::Client::Compute::V1",
+      "tag": "v1"
+    }
+  }
+}
