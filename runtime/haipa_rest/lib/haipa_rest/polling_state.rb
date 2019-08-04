@@ -128,7 +128,7 @@ module Haipa::Client
         [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02], [:cookie_jar]].each{ |args| faraday.use(*args) }
         faraday.adapter Faraday.default_adapter
         faraday.headers = request.headers
-        logging = ENV['Haipa_HTTP_LOGGING'] || request.log
+        logging = ENV['HAIPA_HTTP_LOGGING'] || request.log
         if logging
           faraday.response :logger, nil, { :bodies => logging == 'full' }
         end

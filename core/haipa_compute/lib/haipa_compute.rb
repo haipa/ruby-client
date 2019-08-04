@@ -2,4 +2,17 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 
-require '1.0/generated/haipa_compute'
+module Haipa end
+
+require 'haipa_rest'
+require 'api_configuration'
+
+module Haipa::Client::Compute
+    class << self
+
+        def new(options = {})
+            ApiConfiguration.new(options)
+        end
+
+    end
+end

@@ -18,16 +18,16 @@ module Haipa::Client::Common
       # Default Haipa Client Secret.
       # @return [String] Haipa Client Secret.
       #
-      def client_secret
-        ENV['HAIPA_CLIENT_SECRET']
+      def client_key_file
+        ENV['HAIPA_CLIENT_KEY_FILE']
       end
 
       #
-      # Default Azure Active Directory Service Settings.
-      # @return [MsRestAzure::ActiveDirectoryServiceSettings] Azure Active Directory Service Settings.
+      # Default Haipa identity endpoint.
+      # @return [String] Haipa identiy endpoint
       #
-      def active_directory_settings
-        MsRestAzure::ActiveDirectoryServiceSettings.get_azure_settings
+      def identity_endpoint
+        ENV['HAIPA_IDENTITY_ENDPOINT']
       end
 
       #

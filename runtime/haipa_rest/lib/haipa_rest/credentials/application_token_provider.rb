@@ -2,6 +2,8 @@
 # Copyright (c) dbosoft GmbH and Haipa Contributors. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 
+require 'jwt'
+
 module Haipa::Client
   #
   # Class that provides access to authentication token.
@@ -10,18 +12,17 @@ module Haipa::Client
 
     private
 
-    TOKEN_ACQUIRE_URL = '{authentication_endpoint}{tenant_id}/oauth2/token'
-    REQUEST_BODY_PATTERN = 'resource={resource_uri}&client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials'
+    TOKEN_ACQUIRE_URL = '{identity_endpoint}/connect/token'
     DEFAULT_SCHEME = 'Bearer'
 
-    # @return [ActiveDirectoryServiceSettings] settings.
-    attr_accessor :settings
-
-    # @return [String] application id.
+    # @return [String] client id.
     attr_accessor :client_id
 
-    # @return [String] application secret key.
-    attr_accessor :client_secret
+    # @return [String] client key
+    attr_accessor :client_key
+
+    # @return [String] url to identity endpoint.
+    attr_accessor :identity_endpoint
 
     # @return [String] auth token.
     attr_accessor :token
@@ -39,20 +40,18 @@ module Haipa::Client
 
     #
     # Creates and initialize new instance of the ApplicationTokenProvider class.
-    # @param tenant_id [String] tenant id (also known as domain).
     # @param client_id [String] client id.
-    # @param client_secret [String] client secret.
-    # @param settings [ActiveDirectoryServiceSettings] active directory setting.
-    def initialize(tenant_id, client_id, client_secret, settings = ActiveDirectoryServiceSettings.get_Haipa_settings)
-      fail ArgumentError, 'Tenant id cannot be nil' if tenant_id.nil?
+    # @param client_key [String] client key.
+    # @param identity_endpoint [String] url of identity endpoint.
+    # @param ca_file [String] path to additional ca file.
+    def initialize(client_id, client_key, identity_endpoint)
       fail ArgumentError, 'Client id cannot be nil' if client_id.nil?
-      fail ArgumentError, 'Client secret key cannot be nil' if client_secret.nil?
-      fail ArgumentError, 'Haipa AD settings cannot be nil' if settings.nil?
+      fail ArgumentError, 'Client key cannot be nil' if client_key.nil?
+      fail ArgumentError, 'Identity_endpoint url cannot be nil' if identity_endpoint.nil?
 
-      @tenant_id = tenant_id
       @client_id = client_id
-      @client_secret = client_secret
-      @settings = settings
+      @client_key = client_key
+      @identity_endpoint = identity_endpoint
 
       @expiration_threshold = 5 * 60
     end
@@ -83,32 +82,36 @@ module Haipa::Client
     # @return [String] new authentication token.
     def acquire_token
       token_acquire_url = TOKEN_ACQUIRE_URL.dup
-      token_acquire_url['{authentication_endpoint}'] = @settings.authentication_endpoint
-      token_acquire_url['{tenant_id}'] = @tenant_id
+      token_acquire_url['{identity_endpoint}'] = @identity_endpoint
 
       url = URI.parse(token_acquire_url)
 
-      connection = Faraday.new(:url => url, :ssl => MsRest.ssl_options) do |builder|
-        builder.adapter Faraday.default_adapter
-      end
+      connection = Faraday.new(:url => url, :ssl => MsRest.ssl_options)
+      exp = Time.now.to_i + @expiration_threshold
 
-      request_body = REQUEST_BODY_PATTERN.dup
-      request_body['{resource_uri}'] = ERB::Util.url_encode(@settings.token_audience)
-      request_body['{client_id}'] = ERB::Util.url_encode(@client_id)
-      request_body['{client_secret}'] = ERB::Util.url_encode(@client_secret)
+      payload = { iss: client_id,
+        aud: token_acquire_url,
+        sub: @client_id,
+        exp: exp
+      }
 
-      response = connection.get do |request|
-        request.headers['content-type'] = 'application/x-www-form-urlencoded'
-        request.body = request_body
-      end
+      signed_payload = JWT.encode payload, client_key, 'RS256'
 
+      response = connection.post url.path, { 
+        :grant_type => 'client_credentials',
+        :client_id => client_id,
+        :client_assertion_type => 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+        :client_assertion => signed_payload,
+        :scope => 'compute_api' }
+      
       fail HaipaOperationError,
-        'Couldn\'t login to Haipa, please verify your tenant id, client id and client secret' unless response.status == 200
+        'Couldn\'t login to Haipa, please verify your client id and client key' unless response.status == 200
 
       response_body = JSON.load(response.body)
       @token = response_body['access_token']
-      @token_expires_on = Time.at(Integer(response_body['expires_on']))
+      @token_expires_on = Time.now + Integer(response_body['expires_in'])
       @token_type = response_body['token_type']
+      
     end
   end
 

@@ -2,21 +2,26 @@
 # Copyright (c) dbosoft GmbH and Haipa Contributors. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for license information.
 
+require 'openssl'
+
 module Haipa::Client::Common
   # The Haipa::Common::Configurable module provides basic configuration for Haipa activities.
   module Configurable
 
-    # @return [String] client id.
-    attr_accessor :client_id
-
-    # @return [String] secret key.
-    attr_accessor :client_secret
-
     # @return [MsRest::ServiceClientCredentials] credentials to authorize HTTP requests made by the service client.
     attr_accessor :credentials
 
-    # @return [MsRestAzure::ActiveDirectoryServiceSettings] Azure active directory service settings.
-    attr_accessor :active_directory_settings    
+    # @return [String] client id.
+    attr_accessor :client_id
+
+    # @return [String] path to client key file
+    attr_accessor :client_key_file
+
+    # @return [String] client key
+    attr_accessor :client_key
+
+    # @return [String] url to identity endpoint.
+    attr_accessor :identity_endpoint
 
     class << self
       #
@@ -24,7 +29,7 @@ module Haipa::Client::Common
       # @return [Array] of option keys.
       #
       def keys
-        @keys ||= [:client_id, :client_secret, :active_directory_settings]
+        @keys ||= [:client_id, :client_key_file, :identity_endpoint ]
       end
     end
 
@@ -45,16 +50,21 @@ module Haipa::Client::Common
         instance_variable_set(:"@#{key}", options.fetch(key, default_value))
       end
 
+      if(options[:client_key].nil?)
+        # The user has not passed in the client key. try to read it from client_key_file
+        self.client_key = OpenSSL::PKey::RSA.new File.read self.client_key_file unless self.client_key_file.nil?       
+      end
+
       if(options[:credentials].nil?)
-        # The user has not passed in the credentials. So, the SDK has to
+        # The user has not passed in the credentials. So, the api has to
         # build the credentials itself.
         fail ArgumentError, 'client_id is nil' if self.client_id.nil?
-        fail ArgumentError, 'client_secret is nil' if self.client_secret.nil?
-        fail ArgumentError, 'active_directory_settings is nil' if self.active_directory_settings.nil?
+        fail ArgumentError, 'client_key is nil' if self.client_key.nil?
+        fail ArgumentError, 'identity_endpoint is nil' if self.identity_endpoint.nil?
 
         self.credentials = MsRest::TokenCredentials.new(
             Haipa::Client::ApplicationTokenProvider.new(
-                self.client_id, self.client_secret, self.active_directory_settings))
+                self.client_id, self.client_key, self.identity_endpoint))
       else
         self.credentials = options[:credentials]
       end

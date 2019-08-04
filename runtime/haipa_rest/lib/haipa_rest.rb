@@ -7,7 +7,6 @@ require 'haipa_rest/async_operation_status.rb'
 require 'haipa_rest/Haipa_operation_error.rb'
 require 'haipa_rest/Haipa_operation_response.rb'
 require 'haipa_rest/Haipa_service_client.rb'
-require 'haipa_rest/haipa_service_settings.rb'
 require 'haipa_rest/cloud_error_data.rb'
 require 'haipa_rest/final_state_via.rb'
 require 'haipa_rest/credentials/application_token_provider.rb'
@@ -21,7 +20,6 @@ require 'haipa_rest/common/default'
 module Haipa end
 module Haipa::Client end
 module Haipa::Client::Serialization end
-module Haipa::Client::HaipaEnvironments end
 module Haipa::Client::Common end
 module Haipa::Client::Common::Configurable end
 module Haipa::Client::Common::Default end

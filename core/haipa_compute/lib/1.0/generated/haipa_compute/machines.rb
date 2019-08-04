@@ -139,10 +139,11 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
+    # @return [Operation] operation results.
     #
     def update_or_create(config:nil, custom_headers:nil)
       response = update_or_create_async(config:config, custom_headers:custom_headers).value!
-      nil
+      response.body unless response.nil?
     end
 
     #
@@ -202,6 +203,16 @@ module Haipa::Client::Compute::V1_0
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
         result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
         result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
+        # Deserialize Response
+        if status_code == 200
+          begin
+            parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
+            result_mapper = Haipa::Client::Compute::V1_0::Models::Operation.mapper()
+            result.body = @client.deserialize(result_mapper, parsed_response)
+          rescue Exception => e
+            fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)
+          end
+        end
 
         result
       end
@@ -305,10 +316,11 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
+    # @return [Operation] operation results.
     #
     def delete(key, custom_headers:nil)
       response = delete_async(key, custom_headers:custom_headers).value!
-      nil
+      response.body unless response.nil?
     end
 
     #
@@ -363,6 +375,16 @@ module Haipa::Client::Compute::V1_0
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
         result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
         result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
+        # Deserialize Response
+        if status_code == 200
+          begin
+            parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
+            result_mapper = Haipa::Client::Compute::V1_0::Models::Operation.mapper()
+            result.body = @client.deserialize(result_mapper, parsed_response)
+          rescue Exception => e
+            fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)
+          end
+        end
 
         result
       end
@@ -378,10 +400,11 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
+    # @return [Operation] operation results.
     #
     def start(key, select:nil, expand:nil, custom_headers:nil)
       response = start_async(key, select:select, expand:expand, custom_headers:custom_headers).value!
-      nil
+      response.body unless response.nil?
     end
 
     #
@@ -443,6 +466,16 @@ module Haipa::Client::Compute::V1_0
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
         result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
         result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
+        # Deserialize Response
+        if status_code == 200
+          begin
+            parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
+            result_mapper = Haipa::Client::Compute::V1_0::Models::Operation.mapper()
+            result.body = @client.deserialize(result_mapper, parsed_response)
+          rescue Exception => e
+            fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)
+          end
+        end
 
         result
       end
@@ -458,10 +491,11 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
+    # @return [Operation] operation results.
     #
     def stop(key, select:nil, expand:nil, custom_headers:nil)
       response = stop_async(key, select:select, expand:expand, custom_headers:custom_headers).value!
-      nil
+      response.body unless response.nil?
     end
 
     #
@@ -523,6 +557,16 @@ module Haipa::Client::Compute::V1_0
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
         result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
         result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
+        # Deserialize Response
+        if status_code == 200
+          begin
+            parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
+            result_mapper = Haipa::Client::Compute::V1_0::Models::Operation.mapper()
+            result.body = @client.deserialize(result_mapper, parsed_response)
+          rescue Exception => e
+            fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)
+          end
+        end
 
         result
       end
