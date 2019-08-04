@@ -11,16 +11,17 @@ require '../haipa_compute/lib/version'
 Gem::Specification.new do |spec|
   spec.name          = 'haipa_compute'
   spec.version       = Haipa::Client::Compute::VERSION
-  spec.authors       = 'Microsoft Corporation'
-  spec.email         = 'azrubyteam@microsoft.com'
-  spec.homepage      = 'https://aka.ms/azure-sdk-for-ruby'
-  spec.summary       = 'Official Ruby client library to consume Compute'
+  spec.authors       = 'Haipa Contributors'
+  spec.email         = 'package-maintainers@haipa.io'
+  spec.summary       = %q{Haipa Client Library for Ruby.}
+  spec.description   = %q{Haipa Client Library for Ruby.}
+  spec.homepage      = 'https://github.com/haipa/ruby-client'
   spec.license       = 'MIT'
   spec.metadata      = {
-    'bug_tracker_uri' => 'https://github.com/Azure/azure-sdk-for-ruby/issues',
-    'changelog_uri' => 'https://github.com/Azure/azure-sdk-for-ruby/blob/master/ChangeLog.md',
-    'documentation_uri' => 'https://azure.microsoft.com/en-us/develop/ruby/',
-    'homepage_uri' => 'https://aka.ms/azure-sdk-for-ruby'
+    'bug_tracker_uri' => 'https://github.com/haipa/haipa/issues',
+    'documentation_uri' => 'https://github.com/haipa/ruby-client',
+    'homepage_uri' => 'https://github.com/haipa/ruby-client',
+    'source_code_uri' => "https://github.com/haipa/ruby-client"
   }
 
   spec.files         = Dir["LICENSE.txt", "lib/**/*"]
@@ -36,5 +37,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3'
   spec.add_development_dependency 'dotenv', '~> 2'
 
-  spec.add_runtime_dependency 'ms_rest_azure', '~> 0.11.1'
+  spec.add_runtime_dependency 'haipa_rest', '~> 0.11.1'
 end
