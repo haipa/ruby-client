@@ -59,7 +59,8 @@ module Haipa::Client::Compute
                 mapper_hash = mapper_class.mapper()
             end
 
-            @client.deserialize(mapper_hash, hash)
+            hash_with_string_keys = JSON.parse(hash.to_json)
+            @client.deserialize(mapper_hash, hash_with_string_keys)
         end
 
         def module_version
