@@ -16,6 +16,9 @@ module Haipa::Client::Compute::V1_0
       # @return [String]
       attr_accessor :name
 
+      # @return [String]
+      attr_accessor :id
+
       # @return [VirtualMachineConfig]
       attr_accessor :vm
 
@@ -43,6 +46,14 @@ module Haipa::Client::Compute::V1_0
                 client_side_validation: true,
                 required: false,
                 serialized_name: 'name',
+                type: {
+                  name: 'String'
+                }
+              },
+              id: {
+                client_side_validation: true,
+                required: false,
+                serialized_name: 'id',
                 type: {
                   name: 'String'
                 }

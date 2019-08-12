@@ -4,5 +4,5 @@
 
 module Haipa end
 module Haipa::Client
-  REST_VERSION = '0.11.2'
+  REST_VERSION = '0.11.4'
 end
