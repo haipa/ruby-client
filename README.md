@@ -1,4 +1,6 @@
 # haipa-client for Ruby
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhaipa%2Fruby-client.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhaipa%2Fruby-client?ref=badge_shield)
+
 
 This library implements a client for haipa (http://haipa.io) for ruby. 
 
@@ -38,3 +40,6 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/haipa/
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhaipa%2Fruby-client.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhaipa%2Fruby-client?ref=badge_large)
