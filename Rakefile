@@ -6,6 +6,11 @@ require 'os'
 require 'json'
 require 'fileutils'
 
+## TODO:
+# Implement command:
+# autorest --package-name=haipa_compute D:\Source\Repos\Haipa\haipa-api-spec\specification\readme.md --namespace=Haipa::Client::Compute::V1_0 --tag=v1 --package-version=0.0.1 --output-folder=D:/fwagner/Documents/ruby/haipa-client/core/haipa_compute/lib/ --use=D:\Source\Repos\Haipa\autorest.ruby --ruby --haipa
+
+
 def get_config_files_folder
     "#{__dir__}/config"
   end
@@ -74,7 +79,7 @@ task :regen_sdk_versions, [:gem_name] => [:regen_folder_structure_if_required, :
             end
           end
         end
-        command = "#{ar_base_command} --package-name=#{package_name} #{ar_arguments} --package-version=#{gem_versions[component][dir]} --output-folder=#{File.join(Dir.pwd, 'lib', output_folder)} --azure-arm --ruby"
+        command = "#{ar_base_command} --package-name=#{package_name} #{ar_arguments} --package-version=#{gem_versions[component][dir]} --output-folder=#{File.join(Dir.pwd, 'lib', output_folder)} --haipa --ruby"
         execute_and_stream(command)
       end
       update_gem_version('lib/version.rb', gem_versions[component][dir])

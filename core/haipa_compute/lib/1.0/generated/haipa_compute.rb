@@ -17,9 +17,9 @@ require 'faraday-cookie_jar'
 require 'concurrent'
 require 'ms_rest'
 require '1.0/generated/haipa_compute/module_definition'
-require 'ms_rest_azure'
+require 'haipa_rest'
 
-module Haipa::Client::Compute::V1
+module Haipa::Client::Compute::V1_0
   autoload :Machines,                                           '1.0/generated/haipa_compute/machines.rb'
   autoload :Networks,                                           '1.0/generated/haipa_compute/networks.rb'
   autoload :Operations,                                         '1.0/generated/haipa_compute/operations.rb'

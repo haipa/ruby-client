@@ -3,12 +3,12 @@
 # Changes may cause incorrect behavior and will be lost if the code is
 # regenerated.
 
-module Haipa::Client::Compute::V1
+module Haipa::Client::Compute::V1_0
   #
   # Haipa management API
   #
   class Subnets
-    include MsRestAzure
+    include Haipa::Client
 
     #
     # Creates and initializes a new instance of the Subnets class.
@@ -41,7 +41,7 @@ module Haipa::Client::Compute::V1
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
-    # @return [MsRestAzure::AzureOperationResponse] HTTP response information.
+    # @return [Haipa::Client::HaipaOperationResponse] HTTP response information.
     #
     def list_with_http_info(select:nil, expand:nil, custom_headers:nil)
       list_async(select:select, expand:expand, custom_headers:custom_headers).value!
@@ -70,7 +70,7 @@ module Haipa::Client::Compute::V1
       request_url = @base_url || @client.base_url
 
       options = {
-          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02], [:cookie_jar]],
+          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02]],
           query_params: {'$select' => select,'$expand' => expand},
           headers: request_headers.merge(custom_headers || {}),
           base_url: request_url
@@ -83,10 +83,12 @@ module Haipa::Client::Compute::V1
         response_content = http_response.body
         unless status_code == 200
           error_model = JSON.load(response_content)
-          fail MsRestAzure::AzureOperationError.new(result.request, http_response, error_model)
+          fail Haipa::Client::HaipaOperationError.new(result.request, http_response, error_model)
         end
 
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
+        result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
+        result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
 
         result
       end
