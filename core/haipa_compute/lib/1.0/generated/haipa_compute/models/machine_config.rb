@@ -3,7 +3,7 @@
 # Changes may cause incorrect behavior and will be lost if the code is
 # regenerated.
 
-module Haipa::Client::Compute::V1_0
+module Haipa::Client::Compute::V1
   module Models
     #
     # Model object.
@@ -11,13 +11,19 @@ module Haipa::Client::Compute::V1_0
     #
     class MachineConfig
 
-      include Haipa::Client
+      include MsRestAzure
 
       # @return [String]
       attr_accessor :name
 
       # @return [String]
       attr_accessor :id
+
+      # @return [String]
+      attr_accessor :environment
+
+      # @return [String]
+      attr_accessor :project
 
       # @return [VirtualMachineConfig]
       attr_accessor :vm
@@ -54,6 +60,22 @@ module Haipa::Client::Compute::V1_0
                 client_side_validation: true,
                 required: false,
                 serialized_name: 'id',
+                type: {
+                  name: 'String'
+                }
+              },
+              environment: {
+                client_side_validation: true,
+                required: false,
+                serialized_name: 'environment',
+                type: {
+                  name: 'String'
+                }
+              },
+              project: {
+                client_side_validation: true,
+                required: false,
+                serialized_name: 'project',
                 type: {
                   name: 'String'
                 }

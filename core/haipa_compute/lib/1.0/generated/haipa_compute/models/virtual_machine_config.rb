@@ -3,7 +3,7 @@
 # Changes may cause incorrect behavior and will be lost if the code is
 # regenerated.
 
-module Haipa::Client::Compute::V1_0
+module Haipa::Client::Compute::V1
   module Models
     #
     # Model object.
@@ -11,10 +11,13 @@ module Haipa::Client::Compute::V1_0
     #
     class VirtualMachineConfig
 
-      include Haipa::Client
+      include MsRestAzure
 
       # @return [String]
-      attr_accessor :path
+      attr_accessor :slug
+
+      # @return [String]
+      attr_accessor :data_store
 
       # @return [VirtualMachineCpuConfig]
       attr_accessor :cpu
@@ -22,8 +25,8 @@ module Haipa::Client::Compute::V1_0
       # @return [VirtualMachineMemoryConfig]
       attr_accessor :memory
 
-      # @return [Array<VirtualMachineDiskConfig>]
-      attr_accessor :disks
+      # @return [Array<VirtualMachineDriveConfig>]
+      attr_accessor :drives
 
       # @return [Array<VirtualMachineNetworkAdapterConfig>]
       attr_accessor :network_adapters
@@ -42,10 +45,18 @@ module Haipa::Client::Compute::V1_0
             name: 'Composite',
             class_name: 'VirtualMachineConfig',
             model_properties: {
-              path: {
+              slug: {
                 client_side_validation: true,
                 required: false,
-                serialized_name: 'path',
+                serialized_name: 'slug',
+                type: {
+                  name: 'String'
+                }
+              },
+              data_store: {
+                client_side_validation: true,
+                required: false,
+                serialized_name: 'dataStore',
                 type: {
                   name: 'String'
                 }
@@ -68,19 +79,19 @@ module Haipa::Client::Compute::V1_0
                   class_name: 'VirtualMachineMemoryConfig'
                 }
               },
-              disks: {
+              drives: {
                 client_side_validation: true,
                 required: false,
-                serialized_name: 'disks',
+                serialized_name: 'drives',
                 type: {
                   name: 'Sequence',
                   element: {
                       client_side_validation: true,
                       required: false,
-                      serialized_name: 'VirtualMachineDiskConfigElementType',
+                      serialized_name: 'VirtualMachineDriveConfigElementType',
                       type: {
                         name: 'Composite',
-                        class_name: 'VirtualMachineDiskConfig'
+                        class_name: 'VirtualMachineDriveConfig'
                       }
                   }
                 }

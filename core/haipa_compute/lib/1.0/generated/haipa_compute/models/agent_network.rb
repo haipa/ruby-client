@@ -3,7 +3,7 @@
 # Changes may cause incorrect behavior and will be lost if the code is
 # regenerated.
 
-module Haipa::Client::Compute::V1_0
+module Haipa::Client::Compute::V1
   module Models
     #
     # Model object.
@@ -11,7 +11,7 @@ module Haipa::Client::Compute::V1_0
     #
     class AgentNetwork
 
-      include Haipa::Client
+      include MsRestAzure
 
       # @return [Network]
       attr_accessor :network

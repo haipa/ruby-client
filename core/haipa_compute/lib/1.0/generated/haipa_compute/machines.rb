@@ -3,12 +3,12 @@
 # Changes may cause incorrect behavior and will be lost if the code is
 # regenerated.
 
-module Haipa::Client::Compute::V1_0
+module Haipa::Client::Compute::V1
   #
   # Haipa management API
   #
   class Machines
-    include Haipa::Client
+    include MsRestAzure
 
     #
     # Creates and initializes a new instance of the Machines class.
@@ -60,7 +60,7 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
-    # @return [Haipa::Client::HaipaOperationResponse] HTTP response information.
+    # @return [MsRestAzure::AzureOperationResponse] HTTP response information.
     #
     def list_with_http_info(select:nil, expand:nil, filter:nil, orderby:nil, top:nil, skip:nil, count:false, custom_headers:nil)
       list_async(select:select, expand:expand, filter:filter, orderby:orderby, top:top, skip:skip, count:count, custom_headers:custom_headers).value!
@@ -98,7 +98,7 @@ module Haipa::Client::Compute::V1_0
       request_url = @base_url || @client.base_url
 
       options = {
-          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02]],
+          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02], [:cookie_jar]],
           query_params: {'$select' => select,'$expand' => expand,'$filter' => filter,'$orderby' => orderby,'$top' => top,'$skip' => skip,'$count' => count},
           headers: request_headers.merge(custom_headers || {}),
           base_url: request_url
@@ -111,17 +111,15 @@ module Haipa::Client::Compute::V1_0
         response_content = http_response.body
         unless status_code == 200 || status_code == 404
           error_model = JSON.load(response_content)
-          fail Haipa::Client::HaipaOperationError.new(result.request, http_response, error_model)
+          fail MsRestAzure::AzureOperationError.new(result.request, http_response, error_model)
         end
 
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
-        result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
-        result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
         # Deserialize Response
         if status_code == 200
           begin
             parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
-            result_mapper = Haipa::Client::Compute::V1_0::Models::ODataValueIEnumerableMachine.mapper()
+            result_mapper = Haipa::Client::Compute::V1::Models::ODataValueIEnumerableMachine.mapper()
             result.body = @client.deserialize(result_mapper, parsed_response)
           rescue Exception => e
             fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)
@@ -151,7 +149,7 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
-    # @return [Haipa::Client::HaipaOperationResponse] HTTP response information.
+    # @return [MsRestAzure::AzureOperationResponse] HTTP response information.
     #
     def update_or_create_with_http_info(config:nil, custom_headers:nil)
       update_or_create_async(config:config, custom_headers:custom_headers).value!
@@ -175,7 +173,7 @@ module Haipa::Client::Compute::V1_0
       request_headers['accept-language'] = @client.accept_language unless @client.accept_language.nil?
 
       # Serialize Request
-      request_mapper = Haipa::Client::Compute::V1_0::Models::MachineConfig.mapper()
+      request_mapper = Haipa::Client::Compute::V1::Models::MachineConfig.mapper()
       request_content = @client.serialize(request_mapper,  config)
       request_content = request_content != nil ? JSON.generate(request_content, quirks_mode: true) : nil
 
@@ -184,7 +182,7 @@ module Haipa::Client::Compute::V1_0
       request_url = @base_url || @client.base_url
 
       options = {
-          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02]],
+          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02], [:cookie_jar]],
           body: request_content,
           headers: request_headers.merge(custom_headers || {}),
           base_url: request_url
@@ -197,17 +195,15 @@ module Haipa::Client::Compute::V1_0
         response_content = http_response.body
         unless status_code == 200
           error_model = JSON.load(response_content)
-          fail Haipa::Client::HaipaOperationError.new(result.request, http_response, error_model)
+          fail MsRestAzure::AzureOperationError.new(result.request, http_response, error_model)
         end
 
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
-        result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
-        result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
         # Deserialize Response
         if status_code == 200
           begin
             parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
-            result_mapper = Haipa::Client::Compute::V1_0::Models::Operation.mapper()
+            result_mapper = Haipa::Client::Compute::V1::Models::Operation.mapper()
             result.body = @client.deserialize(result_mapper, parsed_response)
           rescue Exception => e
             fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)
@@ -243,7 +239,7 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
-    # @return [Haipa::Client::HaipaOperationResponse] HTTP response information.
+    # @return [MsRestAzure::AzureOperationResponse] HTTP response information.
     #
     def get_with_http_info(key, select:nil, expand:nil, custom_headers:nil)
       get_async(key, select:select, expand:expand, custom_headers:custom_headers).value!
@@ -274,7 +270,7 @@ module Haipa::Client::Compute::V1_0
       request_url = @base_url || @client.base_url
 
       options = {
-          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02]],
+          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02], [:cookie_jar]],
           path_params: {'key' => key},
           query_params: {'$select' => select,'$expand' => expand},
           headers: request_headers.merge(custom_headers || {}),
@@ -288,17 +284,15 @@ module Haipa::Client::Compute::V1_0
         response_content = http_response.body
         unless status_code == 200 || status_code == 404
           error_model = JSON.load(response_content)
-          fail Haipa::Client::HaipaOperationError.new(result.request, http_response, error_model)
+          fail MsRestAzure::AzureOperationError.new(result.request, http_response, error_model)
         end
 
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
-        result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
-        result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
         # Deserialize Response
         if status_code == 200
           begin
             parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
-            result_mapper = Haipa::Client::Compute::V1_0::Models::Machine.mapper()
+            result_mapper = Haipa::Client::Compute::V1::Models::Machine.mapper()
             result.body = @client.deserialize(result_mapper, parsed_response)
           rescue Exception => e
             fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)
@@ -328,7 +322,7 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
-    # @return [Haipa::Client::HaipaOperationResponse] HTTP response information.
+    # @return [MsRestAzure::AzureOperationResponse] HTTP response information.
     #
     def delete_with_http_info(key, custom_headers:nil)
       delete_async(key, custom_headers:custom_headers).value!
@@ -356,7 +350,7 @@ module Haipa::Client::Compute::V1_0
       request_url = @base_url || @client.base_url
 
       options = {
-          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02]],
+          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02], [:cookie_jar]],
           path_params: {'key' => key},
           headers: request_headers.merge(custom_headers || {}),
           base_url: request_url
@@ -369,17 +363,15 @@ module Haipa::Client::Compute::V1_0
         response_content = http_response.body
         unless status_code == 200
           error_model = JSON.load(response_content)
-          fail Haipa::Client::HaipaOperationError.new(result.request, http_response, error_model)
+          fail MsRestAzure::AzureOperationError.new(result.request, http_response, error_model)
         end
 
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
-        result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
-        result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
         # Deserialize Response
         if status_code == 200
           begin
             parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
-            result_mapper = Haipa::Client::Compute::V1_0::Models::Operation.mapper()
+            result_mapper = Haipa::Client::Compute::V1::Models::Operation.mapper()
             result.body = @client.deserialize(result_mapper, parsed_response)
           rescue Exception => e
             fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)
@@ -415,7 +407,7 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
-    # @return [Haipa::Client::HaipaOperationResponse] HTTP response information.
+    # @return [MsRestAzure::AzureOperationResponse] HTTP response information.
     #
     def start_with_http_info(key, select:nil, expand:nil, custom_headers:nil)
       start_async(key, select:select, expand:expand, custom_headers:custom_headers).value!
@@ -446,7 +438,7 @@ module Haipa::Client::Compute::V1_0
       request_url = @base_url || @client.base_url
 
       options = {
-          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02]],
+          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02], [:cookie_jar]],
           path_params: {'key' => key},
           query_params: {'$select' => select,'$expand' => expand},
           headers: request_headers.merge(custom_headers || {}),
@@ -460,17 +452,15 @@ module Haipa::Client::Compute::V1_0
         response_content = http_response.body
         unless status_code == 200
           error_model = JSON.load(response_content)
-          fail Haipa::Client::HaipaOperationError.new(result.request, http_response, error_model)
+          fail MsRestAzure::AzureOperationError.new(result.request, http_response, error_model)
         end
 
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
-        result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
-        result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
         # Deserialize Response
         if status_code == 200
           begin
             parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
-            result_mapper = Haipa::Client::Compute::V1_0::Models::Operation.mapper()
+            result_mapper = Haipa::Client::Compute::V1::Models::Operation.mapper()
             result.body = @client.deserialize(result_mapper, parsed_response)
           rescue Exception => e
             fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)
@@ -506,7 +496,7 @@ module Haipa::Client::Compute::V1_0
     # @param custom_headers [Hash{String => String}] A hash of custom headers that
     # will be added to the HTTP request.
     #
-    # @return [Haipa::Client::HaipaOperationResponse] HTTP response information.
+    # @return [MsRestAzure::AzureOperationResponse] HTTP response information.
     #
     def stop_with_http_info(key, select:nil, expand:nil, custom_headers:nil)
       stop_async(key, select:select, expand:expand, custom_headers:custom_headers).value!
@@ -537,7 +527,7 @@ module Haipa::Client::Compute::V1_0
       request_url = @base_url || @client.base_url
 
       options = {
-          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02]],
+          middlewares: [[MsRest::RetryPolicyMiddleware, times: 3, retry: 0.02], [:cookie_jar]],
           path_params: {'key' => key},
           query_params: {'$select' => select,'$expand' => expand},
           headers: request_headers.merge(custom_headers || {}),
@@ -551,17 +541,15 @@ module Haipa::Client::Compute::V1_0
         response_content = http_response.body
         unless status_code == 200
           error_model = JSON.load(response_content)
-          fail Haipa::Client::HaipaOperationError.new(result.request, http_response, error_model)
+          fail MsRestAzure::AzureOperationError.new(result.request, http_response, error_model)
         end
 
         result.request_id = http_response['x-ms-request-id'] unless http_response['x-ms-request-id'].nil?
-        result.correlation_request_id = http_response['x-ms-correlation-request-id'] unless http_response['x-ms-correlation-request-id'].nil?
-        result.client_request_id = http_response['x-ms-client-request-id'] unless http_response['x-ms-client-request-id'].nil?
         # Deserialize Response
         if status_code == 200
           begin
             parsed_response = response_content.to_s.empty? ? nil : JSON.load(response_content)
-            result_mapper = Haipa::Client::Compute::V1_0::Models::Operation.mapper()
+            result_mapper = Haipa::Client::Compute::V1::Models::Operation.mapper()
             result.body = @client.deserialize(result_mapper, parsed_response)
           rescue Exception => e
             fail MsRest::DeserializationError.new('Error occurred in deserializing the response', e.message, e.backtrace, result)

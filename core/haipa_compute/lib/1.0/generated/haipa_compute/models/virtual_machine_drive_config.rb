@@ -3,21 +3,24 @@
 # Changes may cause incorrect behavior and will be lost if the code is
 # regenerated.
 
-module Haipa::Client::Compute::V1_0
+module Haipa::Client::Compute::V1
   module Models
     #
     # Model object.
     #
     #
-    class VirtualMachineDiskConfig
+    class VirtualMachineDriveConfig
 
-      include Haipa::Client
+      include MsRestAzure
 
       # @return [String]
       attr_accessor :name
 
       # @return [String]
-      attr_accessor :path
+      attr_accessor :share_slug
+
+      # @return [String]
+      attr_accessor :data_store
 
       # @return [String]
       attr_accessor :template
@@ -25,19 +28,23 @@ module Haipa::Client::Compute::V1_0
       # @return [Integer]
       attr_accessor :size
 
+      # @return [Enum] Possible values include: 'VHD', 'SharedVHD', 'PHD',
+      # 'DVD'
+      attr_accessor :type
+
 
       #
-      # Mapper for VirtualMachineDiskConfig class as Ruby Hash.
+      # Mapper for VirtualMachineDriveConfig class as Ruby Hash.
       # This will be used for serialization/deserialization.
       #
       def self.mapper()
         {
           client_side_validation: true,
           required: false,
-          serialized_name: 'VirtualMachineDiskConfig',
+          serialized_name: 'VirtualMachineDriveConfig',
           type: {
             name: 'Composite',
-            class_name: 'VirtualMachineDiskConfig',
+            class_name: 'VirtualMachineDriveConfig',
             model_properties: {
               name: {
                 client_side_validation: true,
@@ -47,10 +54,18 @@ module Haipa::Client::Compute::V1_0
                   name: 'String'
                 }
               },
-              path: {
+              share_slug: {
                 client_side_validation: true,
                 required: false,
-                serialized_name: 'path',
+                serialized_name: 'shareSlug',
+                type: {
+                  name: 'String'
+                }
+              },
+              data_store: {
+                client_side_validation: true,
+                required: false,
+                serialized_name: 'dataStore',
                 type: {
                   name: 'String'
                 }
@@ -69,6 +84,14 @@ module Haipa::Client::Compute::V1_0
                 serialized_name: 'size',
                 type: {
                   name: 'Number'
+                }
+              },
+              type: {
+                client_side_validation: true,
+                required: false,
+                serialized_name: 'type',
+                type: {
+                  name: 'String'
                 }
               }
             }

@@ -17,9 +17,9 @@ require 'faraday-cookie_jar'
 require 'concurrent'
 require 'ms_rest'
 require '1.0/generated/haipa_compute/module_definition'
-require 'haipa_rest'
+require 'ms_rest_azure'
 
-module Haipa::Client::Compute::V1_0
+module Haipa::Client::Compute::V1
   autoload :Machines,                                           '1.0/generated/haipa_compute/machines.rb'
   autoload :Networks,                                           '1.0/generated/haipa_compute/networks.rb'
   autoload :Operations,                                         '1.0/generated/haipa_compute/operations.rb'
@@ -27,7 +27,7 @@ module Haipa::Client::Compute::V1_0
   autoload :HaipaCompute,                                       '1.0/generated/haipa_compute/haipa_compute.rb'
 
   module Models
-    autoload :VirtualMachineDiskConfig,                           '1.0/generated/haipa_compute/models/virtual_machine_disk_config.rb'
+    autoload :VirtualMachineDriveConfig,                          '1.0/generated/haipa_compute/models/virtual_machine_drive_config.rb'
     autoload :Subnet,                                             '1.0/generated/haipa_compute/models/subnet.rb'
     autoload :VirtualMachineNetworkAdapterConfig,                 '1.0/generated/haipa_compute/models/virtual_machine_network_adapter_config.rb'
     autoload :AgentNetwork,                                       '1.0/generated/haipa_compute/models/agent_network.rb'

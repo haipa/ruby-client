@@ -3,7 +3,7 @@
 # Changes may cause incorrect behavior and will be lost if the code is
 # regenerated.
 
-module Haipa::Client::Compute::V1_0
+module Haipa::Client::Compute::V1
   module Models
     #
     # Model object.
@@ -11,13 +11,16 @@ module Haipa::Client::Compute::V1_0
     #
     class VirtualMachineProvisioningConfig
 
-      include Haipa::Client
+      include MsRestAzure
 
       # @return [String]
       attr_accessor :hostname
 
       # @return
       attr_accessor :user_data
+
+      # @return [Enum] Possible values include: 'None', 'CloudInit'
+      attr_accessor :method
 
 
       #
@@ -47,6 +50,14 @@ module Haipa::Client::Compute::V1_0
                 serialized_name: 'userData',
                 type: {
                   name: 'Object'
+                }
+              },
+              method: {
+                client_side_validation: true,
+                required: false,
+                serialized_name: 'method',
+                type: {
+                  name: 'String'
                 }
               }
             }

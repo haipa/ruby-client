@@ -6,4 +6,4 @@
 module Haipa end
 module Haipa::Client end
 module Haipa::Client::Compute end
-module Haipa::Client::Compute::V1_0 end
+module Haipa::Client::Compute::V1 end
